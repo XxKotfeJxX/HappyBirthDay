@@ -666,6 +666,8 @@ const chaseTaunts = [
   "я тут... нет, уже там!",
 ];
 
+const CHASE_HITBOX_PADDING = 18;
+
 function showChaseTaunt() {
   const options = chaseTaunts.filter((item) => item !== lastChaseTaunt);
   const message = options[Math.floor(Math.random() * options.length)] || chaseTaunts[0];
@@ -684,16 +686,22 @@ async function handleChaseWin(event) {
   setTimeout(startFinal, reduceMotion ? 10 : 1200);
 }
 
-function isPointerInsideButton(x, y) {
+function isPointerInsideButton(x, y, padding = 0) {
   const rect = chaseBtn.getBoundingClientRect();
-  return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+  const pad = Number.isFinite(padding) ? padding : 0;
+  return (
+    x >= rect.left - pad &&
+    x <= rect.right + pad &&
+    y >= rect.top - pad &&
+    y <= rect.bottom + pad
+  );
 }
 
 function isEventOnChaseButton(event) {
   if (!event) return false;
   if (event.target && chaseBtn.contains(event.target)) return true;
   if (typeof event.clientX === "number" && typeof event.clientY === "number") {
-    return isPointerInsideButton(event.clientX, event.clientY);
+    return isPointerInsideButton(event.clientX, event.clientY, CHASE_HITBOX_PADDING);
   }
   return false;
 }
@@ -704,7 +712,10 @@ chaseBtn.addEventListener("pointerenter", (event) => {
 });
 chaseArea.addEventListener("mousemove", handleChaseMove);
 chaseArea.addEventListener("click", (event) => {
-  if (isEventOnChaseButton(event)) return;
+  if (isEventOnChaseButton(event)) {
+    handleChaseWin(event);
+    return;
+  }
   showChaseTaunt();
   moveChaseButton({ x: event.clientX, y: event.clientY });
 });
@@ -715,8 +726,12 @@ chaseArea.addEventListener(
     const touch = event.touches[0];
     const onButton =
       (event.target && chaseBtn.contains(event.target)) ||
-      isPointerInsideButton(touch.clientX, touch.clientY);
-    if (onButton) return;
+      isPointerInsideButton(touch.clientX, touch.clientY, CHASE_HITBOX_PADDING);
+    if (onButton) {
+      event.preventDefault();
+      handleChaseWin(event);
+      return;
+    }
     event.preventDefault();
     showChaseTaunt();
     moveChaseButton({ x: touch.clientX, y: touch.clientY });
