@@ -433,7 +433,7 @@ async function startGate() {
 
 function renderQuiz() {
   const question = quizData[quizIndex];
-  quizTitle.textContent = "Маленький квиз с мемным тоном";
+  quizTitle.textContent = "Маленький квиз";
   quizProgress.textContent = `${quizIndex + 1}/${quizData.length}`;
   quizQuestion.textContent = question.question;
   quizOptions.innerHTML = "";
