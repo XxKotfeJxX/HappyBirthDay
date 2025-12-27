@@ -694,18 +694,21 @@ chaseArea.addEventListener("click", (event) => {
   showChaseTaunt();
   moveChaseButton({ x: event.clientX, y: event.clientY });
 });
-chaseArea.addEventListener("touchstart", (event) => {
-  event.preventDefault();
-  if (event.touches.length === 0) return;
-  const touch = event.touches[0];
-  const onButton =
-    (event.target && chaseBtn.contains(event.target)) ||
-    isPointerInsideButton(touch.clientX, touch.clientY);
-  if (!onButton) {
+chaseArea.addEventListener(
+  "touchstart",
+  (event) => {
+    if (event.touches.length === 0) return;
+    const touch = event.touches[0];
+    const onButton =
+      (event.target && chaseBtn.contains(event.target)) ||
+      isPointerInsideButton(touch.clientX, touch.clientY);
+    if (onButton) return;
+    event.preventDefault();
     showChaseTaunt();
-  }
-  moveChaseButton({ x: touch.clientX, y: touch.clientY });
-});
+    moveChaseButton({ x: touch.clientX, y: touch.clientY });
+  },
+  { passive: false }
+);
 
 chaseBtn.addEventListener("click", async (event) => {
   event.stopPropagation();
