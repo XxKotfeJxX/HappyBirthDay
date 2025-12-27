@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Вредный сайт</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Fredoka:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <section id="screen-intro" class="screen active screen-intro">
+        <div class="intro-card">
+          <div class="intro-orb" aria-hidden="true"></div>
+          <h1 class="intro-title">Кликни, чтобы начать</h1>
+          <button id="introStart" class="intro-start" type="button">поехали</button>
+        </div>
+      </section>
+
+      <section id="screen-loading" class="screen screen-loading" aria-live="polite">
+        <div class="center-stack">
+          <div class="glitch-title">Загрузка поздравления<span id="loadingDots">.</span></div>
+          <p id="loadingSub" class="muted"></p>
+          <div class="btn-row">
+            <button id="retryBtn" class="btn btn-ghost hidden" type="button">
+              Попробовать начать заново
+            </button>
+            <button id="okBtn" class="btn btn-primary hidden" type="button">
+              Ну ладно, нажми сюда
+            </button>
+          </div>
+          <div class="meme-strip">
+            <span>😾</span>
+            <span>💥</span>
+            <span>🤯</span>
+            <span>🧁</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-gate" class="screen">
+        <div class="card gate-card">
+          <div id="gateText" class="typewriter"></div>
+          <div id="gateActions" class="btn-row hidden">
+            <button id="gateYes" class="btn btn-primary" type="button">да</button>
+            <button id="gateNo" class="btn btn-ghost" type="button">нет</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-quiz" class="screen">
+        <div class="card quiz-card">
+          <div class="quiz-header">
+            <div id="quizTitle" class="quiz-title">Маленький квиз с мемным тоном</div>
+            <div id="quizProgress" class="quiz-progress">1/2</div>
+          </div>
+          <h2 id="quizQuestion" class="quiz-question"></h2>
+          <div id="quizOptions" class="options"></div>
+          <div id="quizOtherWrap" class="other-wrap hidden">
+            <input id="quizOtherInput" class="other-input" type="text" maxlength="80" />
+            <button id="quizOtherConfirm" class="btn btn-primary" type="button">Дальше</button>
+          </div>
+        </div>
+        <button id="easterOption" class="hidden-option" type="button">
+          Поносить Егра за его существование
+        </button>
+      </section>
+
+      <section id="screen-chase" class="screen">
+        <div class="card chase-card">
+          <div class="chase-title">Последний уровень: догоняй кнопку</div>
+          <p class="muted">Она убегает, но ты быстрее. (надеюсь)</p>
+          <div id="chaseArea" class="chase-area">
+            <button id="chaseBtn" class="btn btn-primary chase-btn" type="button">
+              Получить подарок
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <section id="screen-final" class="screen">
+        <div class="final-wrap">
+          <div class="final-card">
+            <div class="final-media">
+              <div class="photo-frame">
+                <img id="finalImg" class="hidden" alt="С днем рождения" />
+                <div id="finalEmoji" class="final-emoji">🎂</div>
+              </div>
+              <div class="sticker-row">
+                <span>🫶</span>
+                <span>💛</span>
+                <span>✨</span>
+                <span>🐾</span>
+              </div>
+            </div>
+            <div class="final-text">
+              <h2 id="finalTitle"></h2>
+              <p id="finalMessage"></p>
+              <p id="finalExtra" class="final-extra"></p>
+              <p id="finalSummary" class="final-summary"></p>
+              <div class="btn-row">
+                <button id="restartBtn" class="btn btn-ghost" type="button">
+                  заново? (не надо)
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div id="confetti" class="confetti" aria-hidden="true"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <audio id="bgMusic" loop></audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
