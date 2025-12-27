@@ -68,6 +68,7 @@ let lastChaseTaunt = "";
 let typewriterToken = 0;
 let introStarted = false;
 let finalMusicQueued = false;
+let chaseCompleted = false;
 
 const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const screenMusicMap = {
@@ -558,6 +559,7 @@ function scheduleChaseJitter() {
 
 function startChase() {
   showScreen("chase");
+  chaseCompleted = false;
   const areaRect = chaseArea.getBoundingClientRect();
   positionChaseButton(areaRect.width / 2, areaRect.height / 2);
   scheduleChaseJitter();
@@ -671,6 +673,17 @@ function showChaseTaunt() {
   showToast(message, 1600);
 }
 
+async function handleChaseWin(event) {
+  if (chaseCompleted) return;
+  chaseCompleted = true;
+  if (event?.stopPropagation) event.stopPropagation();
+  fireConfetti();
+  stopChaseJitter();
+  finalMusicQueued = true;
+  await forcePlayTrack("final", true);
+  setTimeout(startFinal, reduceMotion ? 10 : 1200);
+}
+
 function isPointerInsideButton(x, y) {
   const rect = chaseBtn.getBoundingClientRect();
   return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
@@ -685,7 +698,8 @@ function isEventOnChaseButton(event) {
   return false;
 }
 
-chaseBtn.addEventListener("mouseenter", (event) => {
+chaseBtn.addEventListener("pointerenter", (event) => {
+  if (event.pointerType !== "mouse") return;
   moveChaseButton({ x: event.clientX, y: event.clientY });
 });
 chaseArea.addEventListener("mousemove", handleChaseMove);
@@ -710,13 +724,22 @@ chaseArea.addEventListener(
   { passive: false }
 );
 
-chaseBtn.addEventListener("click", async (event) => {
-  event.stopPropagation();
-  fireConfetti();
-  stopChaseJitter();
-  finalMusicQueued = true;
-  await forcePlayTrack("final", true);
-  setTimeout(startFinal, reduceMotion ? 10 : 1200);
+chaseBtn.addEventListener("pointerdown", (event) => {
+  if (event.pointerType === "touch" || event.pointerType === "pen") {
+    event.preventDefault();
+    handleChaseWin(event);
+  }
+});
+chaseBtn.addEventListener(
+  "touchstart",
+  (event) => {
+    event.preventDefault();
+    handleChaseWin(event);
+  },
+  { passive: false }
+);
+chaseBtn.addEventListener("click", (event) => {
+  handleChaseWin(event);
 });
 
 restartBtn.addEventListener("click", startLoading);
